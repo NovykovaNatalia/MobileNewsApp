@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">MobileNewsApp</string>
+    <string name="title_activity_second">SecondActivity</string>
+    <string name="COUNT_ONE">1</string>
+    <string name="COUNT_TWO">2</string>
+    <string name="CLICK_ON_ME">Click om me!</string>
+    <string name="NEXT_ACTIVITY">NEXT ACTIVITY</string>
+    <string name="BACK">Back</string>
+    <string name="CLICK">Click!</string>
+    <string name="NEWS">News</string>
 </resources>
