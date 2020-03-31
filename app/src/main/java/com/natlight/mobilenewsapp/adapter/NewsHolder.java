@@ -5,17 +5,33 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.github.curioustechizen.ago.RelativeTimeTextView;
+import com.natlight.mobilenewsapp.R;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     TextView articleTitle;
-    ImageView articleImage;
+    CircleImageView articleImage;
+    RelativeTimeTextView articleTome;
+
+    public void setItemClickListener(ItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
+    }
+
+    ItemClickListener itemClickListener;
 
     public NewsHolder(View view) {
         super(view);
-        view.setOnClickListener(this);
+        articleTitle = (TextView)itemView.findViewById(R.id.article_title);
+        articleImage = (CircleImageView)itemView.findViewById(R.id.article_image);
+        articleTome = (RelativeTimeTextView)itemView.findViewById(R.id.article_time);
 
+        view.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
+        itemClickListener.onClick(view, getAdapterPosition(),false);
     }
 }
