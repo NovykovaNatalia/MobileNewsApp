@@ -8,19 +8,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.natlight.mobilenewsapp.Model.News;
 import com.natlight.mobilenewsapp.Model.WebSite;
+import com.natlight.mobilenewsapp.NewsActivity;
 import com.natlight.mobilenewsapp.R;
 
-public class SourseAdapter extends RecyclerView.Adapter<SourceHolder>{
+public class SourceAdapter extends RecyclerView.Adapter<SourceHolder>{
     private Context context;
     private WebSite webSite;
 
-    public SourseAdapter(Context context, WebSite webSite) {
+    public SourceAdapter(Context context, WebSite webSite) {
         this.context = context;
         this.webSite = webSite;
     }
-
 
     @NonNull
     @Override
@@ -37,7 +36,7 @@ public class SourseAdapter extends RecyclerView.Adapter<SourceHolder>{
         sourceHolder.setItemClickListener(new ItemClickListener() {
             @Override
             public void onClick(View view, int position, boolean isLongClick) {
-                Intent intent = new Intent(context, News.class);
+                Intent intent = new Intent(context, NewsActivity.class);
                 intent.putExtra("source", webSite.getSources().get(position).getId());
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
@@ -48,7 +47,6 @@ public class SourseAdapter extends RecyclerView.Adapter<SourceHolder>{
 
     @Override
     public int getItemCount() {
-
         return  webSite.getSources().size();
     }
 }

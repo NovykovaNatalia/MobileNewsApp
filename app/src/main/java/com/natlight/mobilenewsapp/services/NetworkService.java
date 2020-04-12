@@ -33,5 +33,13 @@ public class NetworkService {
                 .build();
     }
 
+    public  static  String getAPIUrl(String source, String apiKEY){
+        StringBuilder apiUrl = new StringBuilder("https://newsapi.org/v2/top-headlines?sources=");
+        return apiUrl.append(source)
+                .append("&apiKey=")
+                .append(apiKEY)
+                .toString();
+    }
+
 
 }

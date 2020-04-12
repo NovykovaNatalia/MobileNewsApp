@@ -1,6 +1,7 @@
 package com.natlight.mobilenewsapp;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,7 +13,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.natlight.mobilenewsapp.Model.Post;
 import com.natlight.mobilenewsapp.Model.WebSite;
 import com.natlight.mobilenewsapp.services.NetworkService;
 
@@ -23,6 +23,7 @@ import retrofit2.Response;
 public class SecondActivity extends AppCompatActivity {
     private Button prevButton;
     private Button btnNews;
+    private Button goToSourceActivity;
     private TextView textViewSecondActivity;
 
     @Override
@@ -33,15 +34,15 @@ public class SecondActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = findViewById(R.id.fab);
-
         prevButton = findViewById(R.id.btnBack);
         btnNews = findViewById(R.id.btnnewsApi);
+        goToSourceActivity = findViewById(R.id.toSourceBtn);
         textViewSecondActivity = findViewById(R.id.textViewSecondActivity);
-        Intent intent = new Intent(this,MainActivity.class);
+
+        Intent intent = new Intent(this, MainActivity.class);
         prevButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 startActivity(intent);
             }
         });
@@ -62,7 +63,7 @@ public class SecondActivity extends AppCompatActivity {
                             @SuppressLint("SetTextI18n")
                             @Override
                             public void onFailure(@NonNull Call<WebSite> call, @NonNull Throwable t) {
-                               textViewSecondActivity.setText("Error occured while getting request!");
+                                textViewSecondActivity.setText("Error occured while getting request!");
                                 t.printStackTrace();
                             }
                         });
@@ -70,7 +71,15 @@ public class SecondActivity extends AppCompatActivity {
             }
         });
 
+        Intent intentSource = new Intent(this, SourceActivity.class);
+        goToSourceActivity.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View view) {
+
+                startActivity(intentSource);
+            }
+        });
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

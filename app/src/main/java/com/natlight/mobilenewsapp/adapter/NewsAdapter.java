@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.gson.internal.bind.util.ISO8601Utils;
+import com.natlight.mobilenewsapp.ArticleActivity;
 import com.natlight.mobilenewsapp.Model.Article;
 import com.natlight.mobilenewsapp.R;
 import com.natlight.mobilenewsapp.utils.ISO8601Parse;
@@ -38,16 +38,16 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsHolder> {
     @Override
     public void onBindViewHolder(@NonNull NewsHolder holder, int position) {
         Picasso.get()
-            .load(articleList.get(position).getImageUrl())
+            .load(articleList.get(position).getUrlToImage())
             .into(holder.articleImage);
         if(articleList.get(position).getTitle().length() > 65)
             holder.articleTitle.setText(articleList.get(position).getTitle().substring(0,65) + "...");
         else
             holder.articleTitle.setText(articleList.get(position).getTitle());
-        if (articleList.get(position).getPublished() != null) {
+        if (articleList.get(position).getPublishedAt() != null) {
             Date date = null;
             try {
-                date = ISO8601Parse.parse(articleList.get(position).getPublished());
+                date = ISO8601Parse.parse(articleList.get(position).getPublishedAt());
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -57,7 +57,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsHolder> {
         holder.setItemClickListener(new ItemClickListener() {
             @Override
             public void onClick(View view, int position, boolean isLongClick) {
-                Intent detail = new Intent(context, Article.class);
+                Intent detail = new Intent(context, ArticleActivity.class);
                 detail.putExtra("webURL", articleList.get(position).getUrl());
                 detail.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(detail);

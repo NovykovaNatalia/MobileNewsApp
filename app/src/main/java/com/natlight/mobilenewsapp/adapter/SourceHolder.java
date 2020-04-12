@@ -16,8 +16,10 @@ public class SourceHolder  extends RecyclerView.ViewHolder implements View.OnCli
     ItemClickListener itemClickListener;
     TextView source_title;
     CircleImageView source_image;
+
     public SourceHolder(@NonNull View itemView) {
         super(itemView);
+
         source_image = (CircleImageView)itemView.findViewById(R.id.source_image);
         source_title  = (TextView) itemView.findViewById(R.id.source_name);
 

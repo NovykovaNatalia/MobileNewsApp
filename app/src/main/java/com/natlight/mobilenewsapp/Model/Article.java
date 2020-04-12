@@ -1,26 +1,12 @@
 package com.natlight.mobilenewsapp.Model;
 
 public class Article {
+    private String autor;
     private String title;
     private String description;
     private String url;
-    private String autor;
-
-    public Article(String title, String description, String url, String autor, String imageUrl, String published) {
-        this.title = title;
-        this.description = description;
-        this.url = url;
-        this.autor = autor;
-        this.imageUrl = imageUrl;
-        this.published = published;
-    }
-
-
-    public Article() {
-    }
-
-    private String imageUrl;
-    private String published;
+    private String urlToImage;
+    private String publishedAt;
 
     public String getTitle() {
         return title;
@@ -54,20 +40,19 @@ public class Article {
         this.autor = autor;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getUrlToImage() {
+        return urlToImage;
+    }
+    public void setUrlToImage(String urlToImage) {
+        this.urlToImage = urlToImage;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public String getPublishedAt() {
+        return publishedAt;
     }
 
-    public String getPublished() {
-        return published;
-    }
-
-    public void setPublished(String published) {
-        this.published = published;
+    public void setPublishedAt(String publishedAt) {
+        this.publishedAt = publishedAt;
     }
 
 
