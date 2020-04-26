@@ -3,7 +3,9 @@ package com.natlight.mobilenewsapp;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Handler;
+import android.support.annotation.RequiresApi;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -17,28 +19,22 @@ import android.widget.TextView;
 
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.github.florent37.diagonallayout.DiagonalLayout;
-import com.github.ybq.android.spinkit.sprite.Sprite;
-import com.github.ybq.android.spinkit.style.DoubleBounce;
 import com.natlight.mobilenewsapp.Model.Article;
 import com.natlight.mobilenewsapp.Model.News;
 import com.natlight.mobilenewsapp.adapter.NewsAdapter;
 import com.natlight.mobilenewsapp.services.NetworkService;
 import com.squareup.picasso.Picasso;
-
 import java.util.List;
-
-import dmax.dialog.SpotsDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class NewsActivity extends AppCompatActivity {
-    public  static final String API_KEY="017ac0ad7b2c4367ba9e0a08343d8e9b";
+    public static final String API_KEY = "017ac0ad7b2c4367ba9e0a08343d8e9b";
     final int DIALOG_EXIT = 1;
     final String LOG_TAG = "My logs";
     KenBurnsView kbv;
     DiagonalLayout diagonalLayout;
-   // AlertDialog spotsDialog;
     NetworkService mService;
     TextView top_author;
     TextView top_title;
@@ -48,8 +44,8 @@ public class NewsActivity extends AppCompatActivity {
     Handler handler;
 
     String source = "";
-    String sortBy="";
-    String webHotURL="";
+    String sortBy = "";
+    String webHotURL = "";
 
     NewsAdapter adapter;
     RecyclerView lstNews;
@@ -60,15 +56,9 @@ public class NewsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news);
 
-        progressBar = findViewById(R.id.SpinKit);
-        //    public void setProgressBar() {
-//        Sprite doubleBounce = new DoubleBounce();
-//        progressBar.setIndeterminateDrawable(doubleBounce);
-//    }
-
+        progressBar = findViewById(R.id.SpinKitNews);
         ctx = this;
         mService = NetworkService.getInstance();
-       // spotsDialog = new SpotsDialog(this);
 
         swipeRefreshLayout = findViewById(R.id.swipeRefresh);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -83,7 +73,7 @@ public class NewsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent detail = new Intent(getBaseContext(), ArticleActivity.class);
-                detail.putExtra("webURL",webHotURL);
+                detail.putExtra("webURL", webHotURL);
                 startActivity(detail);
             }
         });
@@ -96,10 +86,9 @@ public class NewsActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         lstNews.setLayoutManager(layoutManager);
 
-        if (getIntent() != null){
+        if (getIntent() != null) {
             source = getIntent().getStringExtra("source");
-            if(!source.isEmpty())
-            {
+            if (!source.isEmpty()) {
                 loadNews(source, false);
             }
         }
@@ -107,14 +96,13 @@ public class NewsActivity extends AppCompatActivity {
 
 
     private void loadNews(String source, boolean isRefreshed) {
-        if(!isRefreshed){
-            Log.e("DNOVYKOV", mService.getAPIUrl(source, API_KEY ));
-//            .show();
+        if (!isRefreshed) {
+            Log.e("DNOVYKOV", mService.getAPIUrl(source, API_KEY));
             mService.getNewsJSONApi().getNewestArticles(mService.getAPIUrl(source, API_KEY))
                     .enqueue(new Callback<News>() {
                         @Override
                         public void onResponse(Call<News> call, Response<News> response) {
-                            //spotsDialog.dismiss();
+                            progressBar.setVisibility(View.GONE);
                             Picasso.get()
                                     .load(response.body().getArticles().get(0).getUrlToImage())
                                     .into(kbv);
@@ -122,18 +110,19 @@ public class NewsActivity extends AppCompatActivity {
                             top_author.setText(response.body().getArticles().get(0).getAutor());
                             webHotURL = response.body().getArticles().get(0).getUrl();
 
-                            List<Article>removeFirstItem = response.body().getArticles();
+                            List<Article> removeFirstItem = response.body().getArticles();
                             removeFirstItem.remove(0);
                             adapter = new NewsAdapter(removeFirstItem, getBaseContext());
                             adapter.notifyDataSetChanged();
                             lstNews.setAdapter(adapter);
                             Log.e(LOG_TAG, "Before failure");
-                    }
+                        }
+
                         @Override
                         public void onFailure(Call<News> call, Throwable t) {
-                         //   spotsDialog.dismiss();
+                            progressBar.setVisibility(View.GONE);
                             Log.e("mobileNewsApp", String.format("Request failed. URL: %s ",
-                                    mService.getAPIUrl(source, API_KEY )));
+                                    mService.getAPIUrl(source, API_KEY)));
 
                             AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
                             builder.setMessage("Request failed. please try again")
@@ -144,18 +133,14 @@ public class NewsActivity extends AppCompatActivity {
                                     });
                             builder.create()
                                     .show();
-
-                            //TODO: free dialog.  and mb new dialog window with info about crash
-                            //TODO: and go via button(close?) to previous page.,
                         }
                     });
         } else {
-//            spotsDialog.show();
-            mService.getNewsJSONApi().getNewestArticles(mService.getAPIUrl(source, API_KEY ))
+            mService.getNewsJSONApi().getNewestArticles(mService.getAPIUrl(source, API_KEY))
                     .enqueue(new Callback<News>() {
                         @Override
                         public void onResponse(Call<News> call, Response<News> response) {
-//                            spotsDialog.dismiss();
+                            progressBar.setVisibility(View.GONE);
                             Picasso.get()
                                     .load(response.body().getArticles().get(0).getUrlToImage())
                                     .into(kbv);
@@ -165,7 +150,7 @@ public class NewsActivity extends AppCompatActivity {
 
                             webHotURL = response.body().getArticles().get(0).getUrl();
 
-                            List<Article>removeFirstItem = response.body().getArticles();
+                            List<Article> removeFirstItem = response.body().getArticles();
                             removeFirstItem.remove(0);
 
                             adapter = new NewsAdapter(removeFirstItem, getBaseContext());
@@ -176,9 +161,9 @@ public class NewsActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call<News> call, Throwable t) {
-//                            spotsDialog.dismiss();
+                            progressBar.setVisibility(View.GONE);
                             Log.e("mobileNewsApp", String.format("Request failed. URL: %s ",
-                                    mService.getAPIUrl(source, API_KEY )));
+                                    mService.getAPIUrl(source, API_KEY)));
 
                             AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
                             builder.setMessage("Request failed. please try again")
