@@ -1,6 +1,9 @@
 package com.natlight.mobilenewsapp;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -9,10 +12,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.github.florent37.diagonallayout.DiagonalLayout;
+import com.github.ybq.android.spinkit.sprite.Sprite;
+import com.github.ybq.android.spinkit.style.DoubleBounce;
 import com.natlight.mobilenewsapp.Model.Article;
 import com.natlight.mobilenewsapp.Model.News;
 import com.natlight.mobilenewsapp.adapter.NewsAdapter;
@@ -28,14 +34,18 @@ import retrofit2.Response;
 
 public class NewsActivity extends AppCompatActivity {
     public  static final String API_KEY="017ac0ad7b2c4367ba9e0a08343d8e9b";
-
+    final int DIALOG_EXIT = 1;
+    final String LOG_TAG = "My logs";
     KenBurnsView kbv;
     DiagonalLayout diagonalLayout;
-    AlertDialog alertDialog;
+   // AlertDialog spotsDialog;
     NetworkService mService;
     TextView top_author;
     TextView top_title;
     SwipeRefreshLayout swipeRefreshLayout;
+    Context ctx;
+    ProgressBar progressBar;
+    Handler handler;
 
     String source = "";
     String sortBy="";
@@ -50,8 +60,15 @@ public class NewsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news);
 
+        progressBar = findViewById(R.id.SpinKit);
+        //    public void setProgressBar() {
+//        Sprite doubleBounce = new DoubleBounce();
+//        progressBar.setIndeterminateDrawable(doubleBounce);
+//    }
+
+        ctx = this;
         mService = NetworkService.getInstance();
-        alertDialog = new SpotsDialog(this);
+       // spotsDialog = new SpotsDialog(this);
 
         swipeRefreshLayout = findViewById(R.id.swipeRefresh);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -88,15 +105,16 @@ public class NewsActivity extends AppCompatActivity {
         }
     }
 
+
     private void loadNews(String source, boolean isRefreshed) {
         if(!isRefreshed){
             Log.e("DNOVYKOV", mService.getAPIUrl(source, API_KEY ));
-            alertDialog.show();
-            mService.getNewsJSONApi().getNewestArticles(mService.getAPIUrl(source, API_KEY ))
+//            .show();
+            mService.getNewsJSONApi().getNewestArticles(mService.getAPIUrl(source, API_KEY))
                     .enqueue(new Callback<News>() {
                         @Override
                         public void onResponse(Call<News> call, Response<News> response) {
-                            alertDialog.dismiss();
+                            //spotsDialog.dismiss();
                             Picasso.get()
                                     .load(response.body().getArticles().get(0).getUrlToImage())
                                     .into(kbv);
@@ -109,21 +127,35 @@ public class NewsActivity extends AppCompatActivity {
                             adapter = new NewsAdapter(removeFirstItem, getBaseContext());
                             adapter.notifyDataSetChanged();
                             lstNews.setAdapter(adapter);
+                            Log.e(LOG_TAG, "Before failure");
                     }
-
                         @Override
                         public void onFailure(Call<News> call, Throwable t) {
+                         //   spotsDialog.dismiss();
+                            Log.e("mobileNewsApp", String.format("Request failed. URL: %s ",
+                                    mService.getAPIUrl(source, API_KEY )));
+
+                            AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+                            builder.setMessage("Request failed. please try again")
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            finish();
+                                        }
+                                    });
+                            builder.create()
+                                    .show();
+
                             //TODO: free dialog.  and mb new dialog window with info about crash
                             //TODO: and go via button(close?) to previous page.,
                         }
                     });
         } else {
-            alertDialog.show();
+//            spotsDialog.show();
             mService.getNewsJSONApi().getNewestArticles(mService.getAPIUrl(source, API_KEY ))
                     .enqueue(new Callback<News>() {
                         @Override
                         public void onResponse(Call<News> call, Response<News> response) {
-                            alertDialog.dismiss();
+//                            spotsDialog.dismiss();
                             Picasso.get()
                                     .load(response.body().getArticles().get(0).getUrlToImage())
                                     .into(kbv);
@@ -144,7 +176,20 @@ public class NewsActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call<News> call, Throwable t) {
+//                            spotsDialog.dismiss();
+                            Log.e("mobileNewsApp", String.format("Request failed. URL: %s ",
+                                    mService.getAPIUrl(source, API_KEY )));
 
+                            AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+                            builder.setMessage("Request failed. please try again")
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            finish();
+                                        }
+                                    });
+                            builder
+                                    .create()
+                                    .show();
 
                         }
                     });

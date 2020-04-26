@@ -17,8 +17,7 @@
             android:layout_height="250dp"
             app:diagonal_angle="5"
             app:diagonal_direction="left"
-            app:diagonal_position="bottom"
-            >
+            app:diagonal_position="bottom">
 
             <com.flaviofaria.kenburnsview.KenBurnsView
                 android:id="@+id/top_image"
@@ -34,7 +33,7 @@
                 <TextView
                     android:id="@+id/top_author"
                     android:layout_gravity="top|left"
-                    android:fontFamily="sans-serif-light"
+                    android:layout_marginStart="30dp" android:fontFamily="sans-serif-light"
                     android:layout_marginLeft="30dp"
                     android:layout_marginBottom="30dp"
                     android:textSize="25sp"
@@ -44,7 +43,7 @@
 
                 <LinearLayout
                     android:orientation="vertical"
-                    android:background="#A0333639"
+                    android:layout_alignParentLeft="true" android:background="#A0333639"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentStart="true"
                     android:layout_width="match_parent"
@@ -53,7 +52,7 @@
                     <TextView
                         android:id="@+id/top_title"
                         android:layout_gravity="top|left"
-                        android:fontFamily="sans-serif-light"
+                        android:layout_marginStart="30dp" android:fontFamily="sans-serif-light"
                         android:layout_marginLeft="30dp"
                         android:layout_marginBottom="30dp"
                         android:textSize="18sp"
@@ -74,6 +73,13 @@
             android:id="@+id/lstNews"
             android:layout_width="match_parent"
             android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+        <com.github.ybq.android.spinkit.SpinKitView
+            android:id="@+id/SpinKit"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_centerInParent = "true"
+            style="@style/SpinKitView.Small.DoubleBounce"
+            app:SpinKit_Color="@color/spots_dialog_color"/>
 
     </RelativeLayout>
 

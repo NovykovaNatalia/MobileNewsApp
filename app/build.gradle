@@ -24,6 +24,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation 'com.squareup.retrofit2:retrofit:2.7.1'
@@ -40,5 +41,6 @@ dependencies {
     implementation 'io.paperdb:paperdb:2.6'
     implementation 'com.flaviofaria:kenburnsview:1.0.7'
     implementation 'com.github.florent37:diagonallayout:1.0.7'
-
+    implementation 'com.makeramen:roundedimageview:2.3.0'
+    implementation 'com.github.ybq:Android-SpinKit:1.4.0'
 }
