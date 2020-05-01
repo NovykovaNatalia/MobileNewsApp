@@ -1,7 +1,7 @@
 package com.natlight.mobilenewsapp.services;
 
 import com.natlight.mobilenewsapp.Model.News;
-import com.natlight.mobilenewsapp.Model.WebSite;
+import com.natlight.mobilenewsapp.Model.NewsSources;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -11,7 +11,7 @@ import static com.natlight.mobilenewsapp.utils.Constants.API_KEY;
 
 public interface NewsApi {
   @GET("v2/sources?language=en&apiKey="+ API_KEY)
-    Call<WebSite>getSources();
+    Call<NewsSources>getSources();
   @GET
      Call<News> getNewestArticles(@Url String url);
 }

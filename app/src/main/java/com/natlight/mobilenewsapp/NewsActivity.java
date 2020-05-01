@@ -3,9 +3,7 @@ package com.natlight.mobilenewsapp;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Handler;
-import android.support.annotation.RequiresApi;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -35,9 +33,9 @@ public class NewsActivity extends AppCompatActivity {
     final String LOG_TAG = "My logs";
     KenBurnsView kbv;
     DiagonalLayout diagonalLayout;
-    NetworkService mService;
-    TextView top_author;
-    TextView top_title;
+    NetworkService networkService;
+    TextView topAuthor;
+    TextView topTitle;
     SwipeRefreshLayout swipeRefreshLayout;
     Context ctx;
     ProgressBar progressBar;
@@ -56,11 +54,20 @@ public class NewsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news);
 
+        /*Declare and initialize variables*/
+        diagonalLayout = findViewById(R.id.diagonalLayout);
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh_source);
         progressBar = findViewById(R.id.SpinKitNews);
-        ctx = this;
-        mService = NetworkService.getInstance();
+        kbv = findViewById(R.id.top_image);
+        topAuthor = findViewById(R.id.top_author);
+        topTitle = findViewById(R.id.top_title);
+        lstNews = findViewById(R.id.lstNews);
 
-        swipeRefreshLayout = findViewById(R.id.swipeRefresh);
+        ctx = this;
+        networkService = NetworkService.getInstance();
+        layoutManager = new LinearLayoutManager(this);
+
+        /* Configuration block*/
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -68,7 +75,6 @@ public class NewsActivity extends AppCompatActivity {
             }
         });
 
-        diagonalLayout = findViewById(R.id.diagonalLayout);
         diagonalLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -77,13 +83,7 @@ public class NewsActivity extends AppCompatActivity {
                 startActivity(detail);
             }
         });
-        kbv = findViewById(R.id.top_image);
-        top_author = findViewById(R.id.top_author);
-        top_title = findViewById(R.id.top_title);
-
-        lstNews = findViewById(R.id.lstNews);
         lstNews.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(this);
         lstNews.setLayoutManager(layoutManager);
 
         if (getIntent() != null) {
@@ -94,92 +94,44 @@ public class NewsActivity extends AppCompatActivity {
         }
     }
 
-
     private void loadNews(String source, boolean isRefreshed) {
-        if (!isRefreshed) {
-            Log.e("DNOVYKOV", mService.getAPIUrl(source, API_KEY));
-            mService.getNewsJSONApi().getNewestArticles(mService.getAPIUrl(source, API_KEY))
-                    .enqueue(new Callback<News>() {
-                        @Override
-                        public void onResponse(Call<News> call, Response<News> response) {
-                            progressBar.setVisibility(View.GONE);
-                            Picasso.get()
-                                    .load(response.body().getArticles().get(0).getUrlToImage())
-                                    .into(kbv);
-                            top_title.setText(response.body().getArticles().get(0).getTitle());
-                            top_author.setText(response.body().getArticles().get(0).getAutor());
-                            webHotURL = response.body().getArticles().get(0).getUrl();
+        //TODO: implement cache feature
+        networkService.getNewsJSONApi()
+            .getNewestArticles(networkService.getAPIUrl(source, API_KEY))
+            .enqueue(new Callback<News>() {
+                @Override
+                public void onResponse(Call<News> call, Response<News> response) {
+                    progressBar.setVisibility(View.GONE);
+                    Picasso.get()
+                            .load(response.body().getArticles().get(0).getUrlToImage())
+                            .into(kbv);
+                    topTitle.setText(response.body().getArticles().get(0).getTitle());
+                    topAuthor.setText(response.body().getArticles().get(0).getAutor());
+                    webHotURL = response.body().getArticles().get(0).getUrl();
 
-                            List<Article> removeFirstItem = response.body().getArticles();
-                            removeFirstItem.remove(0);
-                            adapter = new NewsAdapter(removeFirstItem, getBaseContext());
-                            adapter.notifyDataSetChanged();
-                            lstNews.setAdapter(adapter);
-                            Log.e(LOG_TAG, "Before failure");
-                        }
+                    List<Article> removeFirstItem = response.body().getArticles();
+                    removeFirstItem.remove(0);
+                    adapter = new NewsAdapter(removeFirstItem, getBaseContext());
+                    adapter.notifyDataSetChanged();
+                    lstNews.setAdapter(adapter);
+                }
 
-                        @Override
-                        public void onFailure(Call<News> call, Throwable t) {
-                            progressBar.setVisibility(View.GONE);
-                            Log.e("mobileNewsApp", String.format("Request failed. URL: %s ",
-                                    mService.getAPIUrl(source, API_KEY)));
+                @Override
+                public void onFailure(Call<News> call, Throwable t) {
+                    progressBar.setVisibility(View.GONE);
+                    Log.e("mobileNewsApp", String.format("Request failed. URL: %s ",
+                            networkService.getAPIUrl(source, API_KEY)));
 
-                            AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
-                            builder.setMessage("Request failed. please try again")
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            finish();
-                                        }
-                                    });
-                            builder.create()
-                                    .show();
-                        }
-                    });
-        } else {
-            mService.getNewsJSONApi().getNewestArticles(mService.getAPIUrl(source, API_KEY))
-                    .enqueue(new Callback<News>() {
-                        @Override
-                        public void onResponse(Call<News> call, Response<News> response) {
-                            progressBar.setVisibility(View.GONE);
-                            Picasso.get()
-                                    .load(response.body().getArticles().get(0).getUrlToImage())
-                                    .into(kbv);
-
-                            top_title.setText(response.body().getArticles().get(0).getTitle());
-                            top_author.setText(response.body().getArticles().get(0).getAutor());
-
-                            webHotURL = response.body().getArticles().get(0).getUrl();
-
-                            List<Article> removeFirstItem = response.body().getArticles();
-                            removeFirstItem.remove(0);
-
-                            adapter = new NewsAdapter(removeFirstItem, getBaseContext());
-                            adapter.notifyDataSetChanged();
-                            lstNews.setAdapter(adapter);
-                        }
-
-
-                        @Override
-                        public void onFailure(Call<News> call, Throwable t) {
-                            progressBar.setVisibility(View.GONE);
-                            Log.e("mobileNewsApp", String.format("Request failed. URL: %s ",
-                                    mService.getAPIUrl(source, API_KEY)));
-
-                            AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
-                            builder.setMessage("Request failed. please try again")
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            finish();
-                                        }
-                                    });
-                            builder
-                                    .create()
-                                    .show();
-
-                        }
-                    });
-            swipeRefreshLayout.setRefreshing(false);
-        }
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+                    builder.setMessage("Request failed. please try again")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    finish();
+                                }
+                            });
+                    builder.create()
+                            .show();
+                }
+            });
     }
-
 }

@@ -2,14 +2,14 @@ package com.natlight.mobilenewsapp.Model;
 
 import java.util.List;
 
-public class WebSite {
+public class NewsSources {
 
     private String status;
     private List<Source>sources;
-    public WebSite() {
+    public NewsSources() {
     }
 
-    public WebSite(String status, List<Source> sources) {
+    public NewsSources(String status, List<Source> sources) {
         this.status = status;
         this.sources = sources;
     }
