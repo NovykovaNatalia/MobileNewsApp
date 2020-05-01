@@ -12,7 +12,7 @@
         android:layout_height="match_parent">
 
         <com.github.florent37.diagonallayout.DiagonalLayout
-            android:id="@+id/diagonalLayout"
+            android:id="@+id/diagonal_layout"
             android:layout_width="match_parent"
             android:layout_height="250dp"
             app:diagonal_angle="5"
@@ -69,12 +69,12 @@
         </com.github.florent37.diagonallayout.DiagonalLayout>
 
         <android.support.v7.widget.RecyclerView
-            android:layout_below="@id/diagonalLayout"
-            android:id="@+id/lstNews"
+            android:layout_below="@id/diagonal_layout"
+            android:id="@+id/list_articles"
             android:layout_width="match_parent"
             android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
         <com.github.ybq.android.spinkit.SpinKitView
-            android:id="@+id/SpinKitNews"
+            android:id="@+id/spin_kit_news"
             android:layout_width="75dp"
             android:layout_height="75dp"
             android:layout_centerInParent = "true"
