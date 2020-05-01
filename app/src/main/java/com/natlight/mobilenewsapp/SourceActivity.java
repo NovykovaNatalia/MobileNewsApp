@@ -23,7 +23,7 @@ import retrofit2.Response;
 public class SourceActivity extends AppCompatActivity {
     RecyclerView listWebsite;
     RecyclerView.LayoutManager layoutManager;
-    NetworkService mSevice;
+    NetworkService networkService;
     SourceAdapter adapter;
     ProgressBar progressBar;
     SwipeRefreshLayout swipeLayout;
@@ -33,13 +33,21 @@ public class SourceActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_source);
-
+        /* Declare and initialize variables*/
         ctx = this;
         //Create Cache
         Paper.init(ctx);
 
-        mSevice = NetworkService.getInstance();
+        networkService = NetworkService.getInstance();
         swipeLayout = findViewById(R.id.swipeRefresh);
+        listWebsite = findViewById(R.id.list_source);
+        layoutManager = new LinearLayoutManager(ctx);
+
+        /* End block of declare an initialization*/
+
+        /* Configuration block*/
+        listWebsite.setHasFixedSize(true);
+        listWebsite.setLayoutManager(layoutManager);
 
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -47,11 +55,8 @@ public class SourceActivity extends AppCompatActivity {
                 loadWebsiteSource(true);
             }
         });
+        /* End of Configuration block*/
 
-        listWebsite = (RecyclerView) findViewById(R.id.list_source);
-        listWebsite.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(ctx);
-        listWebsite.setLayoutManager(layoutManager);
         loadWebsiteSource(false);
     }
 
@@ -66,7 +71,7 @@ public class SourceActivity extends AppCompatActivity {
             } else {
                 progressBar = findViewById(R.id.SpinKitSource);
 
-                mSevice.getNewsJSONApi().getSources().enqueue(new Callback<WebSite>() {
+                networkService.getNewsJSONApi().getSources().enqueue(new Callback<WebSite>() {
                     @Override
                     public void onResponse(retrofit2.Call<WebSite> call, Response<WebSite> response) {
                         adapter = new SourceAdapter(getBaseContext(), response.body());
@@ -96,7 +101,7 @@ public class SourceActivity extends AppCompatActivity {
         } else {
             swipeLayout.setRefreshing(true);
 
-            mSevice.getNewsJSONApi().getSources().enqueue(new Callback<WebSite>() {
+            networkService.getNewsJSONApi().getSources().enqueue(new Callback<WebSite>() {
                 @Override
                 public void onResponse(retrofit2.Call<WebSite> call, Response<WebSite> response) {
                     adapter = new SourceAdapter(getBaseContext(), response.body());
@@ -106,7 +111,6 @@ public class SourceActivity extends AppCompatActivity {
                     Paper.book().write("cache", new Gson().toJson(response.body()));
 
                     swipeLayout.setRefreshing(false);
-                    Toast.makeText(getBaseContext(), " else", Toast.LENGTH_LONG).show();
                 }
 
                 @Override
