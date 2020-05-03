@@ -102,7 +102,7 @@ public class NewsActivity extends AppCompatActivity {
                     public void onResponse(Call<News> call, Response<News> response) {
                         progressBar.setVisibility(View.GONE);
                         Picasso.get()
-                                .load(response.body().getArticles().get(0).getUrlToImage())//TODO: article can have empty URL
+                                .load(response.body().getArticles().get(0).getUrlToImage())//TODO: default_source_image can have empty URL
                                 .into(topImage);
                         topTitle.setText(response.body().getArticles().get(0).getTitle());
                         topAuthor.setText(response.body().getArticles().get(0).getAutor());
