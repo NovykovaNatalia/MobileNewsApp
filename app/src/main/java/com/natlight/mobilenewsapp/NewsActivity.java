@@ -105,9 +105,15 @@ public class NewsActivity extends AppCompatActivity {
                         progressBar.setVisibility(View.GONE);
                         String path = response.body().getArticles().get(0).getUrlToImage();
                         if (path != null && !path.isEmpty()) {
-                            Picasso.get()
-                                    .load(path)//TODO: default_source_image can have empty URL
-                                    .into(topImage);
+                            try {
+                                Picasso.get()
+                                        .load(path)//TODO: default_source_image can have empty URL
+                                        .into(topImage);
+                            } catch (Throwable e) {
+                                Log.e("mobileNewsApp", String.format("NewsActivity: Picasso can't set image. imageURL: %s exception cause: %s ",
+                                        path, e.getCause()));
+                                topImage.setImageResource(defaultTopImageId);
+                            }
                         } else {
                             topImage.setImageResource(defaultTopImageId);
                         }
