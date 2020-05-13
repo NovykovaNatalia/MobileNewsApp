@@ -42,6 +42,7 @@ public class NewsActivity extends AppCompatActivity {
     Handler handler;
 
     String source = "";
+    int defaultTopImageId = 0;
     String webHotURL = "";
 
     NewsAdapter adapter;
@@ -87,6 +88,7 @@ public class NewsActivity extends AppCompatActivity {
 
         if (getIntent() != null) {
             source = getIntent().getStringExtra("source");
+            defaultTopImageId = getIntent().getIntExtra("imageId", 0);
             if (!source.isEmpty()) {
                 loadNews(source, false);
             }
@@ -101,9 +103,15 @@ public class NewsActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<News> call, Response<News> response) {
                         progressBar.setVisibility(View.GONE);
-                        Picasso.get()
-                                .load(response.body().getArticles().get(0).getUrlToImage())//TODO: default_source_image can have empty URL
-                                .into(topImage);
+                        String path = response.body().getArticles().get(0).getUrlToImage();
+                        if (path != null && !path.isEmpty()) {
+                            Picasso.get()
+                                    .load(path)//TODO: default_source_image can have empty URL
+                                    .into(topImage);
+                        } else {
+                            topImage.setImageResource(defaultTopImageId);
+                        }
+
                         topTitle.setText(response.body().getArticles().get(0).getTitle());
                         topAuthor.setText(response.body().getArticles().get(0).getAutor());
                         webHotURL = response.body().getArticles().get(0).getUrl();

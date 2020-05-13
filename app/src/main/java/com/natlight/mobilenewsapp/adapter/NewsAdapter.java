@@ -24,24 +24,28 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsHolder> {
         this.context = context;
     }
 
-    private List<Article>articleList;
+    private List<Article> articleList;
     private Context context;
 
     @NonNull
     @Override
     public NewsHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View itemView = inflater.inflate(R.layout.news_layout,parent, false);
+        View itemView = inflater.inflate(R.layout.news_layout, parent, false);
         return new NewsHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull NewsHolder holder, int position) {
-        Picasso.get()
-            .load(articleList.get(position).getUrlToImage())
-            .into(holder.articleImage);
-        if(articleList.get(position).getTitle().length() > 65)
-            holder.articleTitle.setText(articleList.get(position).getTitle().substring(0,65) + "...");
+        String imgUrl = articleList.get(position).getUrlToImage();
+        if (imgUrl != null && !imgUrl.isEmpty()) {
+            Picasso.get()
+                    .load(imgUrl)
+                    .into(holder.articleImage);
+        }
+
+        if (articleList.get(position).getTitle().length() > 65)
+            holder.articleTitle.setText(articleList.get(position).getTitle().substring(0, 65) + "...");
         else
             holder.articleTitle.setText(articleList.get(position).getTitle());
         if (articleList.get(position).getPublishedAt() != null) {
@@ -66,6 +70,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsHolder> {
     }
 
     @Override
-    public int getItemCount() { return articleList.size();
+    public int getItemCount() {
+        return articleList.size();
     }
 }

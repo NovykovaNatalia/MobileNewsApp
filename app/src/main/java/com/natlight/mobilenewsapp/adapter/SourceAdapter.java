@@ -18,7 +18,7 @@ import com.natlight.mobilenewsapp.utils.ImageUtils;
 import java.io.InputStream;
 import java.net.URL;
 
-public class SourceAdapter extends RecyclerView.Adapter<SourceHolder>{
+public class SourceAdapter extends RecyclerView.Adapter<SourceHolder> {
     private Context context;
     private NewsSources newsSources;
 
@@ -41,7 +41,7 @@ public class SourceAdapter extends RecyclerView.Adapter<SourceHolder>{
         String sourceImageName = ImageUtils.getImageName(newsSources.getSources().get(position).getName());
         int id = context.getResources().getIdentifier(sourceImageName, "drawable", context.getPackageName());
 
-        if(id != 0) {
+        if (id != 0) {
             sourceHolder.source_image.setImageResource(id);
         }
 
@@ -50,6 +50,7 @@ public class SourceAdapter extends RecyclerView.Adapter<SourceHolder>{
             public void onClick(View view, int position, boolean isLongClick) {
                 Intent intent = new Intent(context, NewsActivity.class);
                 intent.putExtra("source", newsSources.getSources().get(position).getId());
+                intent.putExtra("imageId", id);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }
@@ -59,6 +60,6 @@ public class SourceAdapter extends RecyclerView.Adapter<SourceHolder>{
 
     @Override
     public int getItemCount() {
-        return  newsSources.getSources().size();
+        return newsSources.getSources().size();
     }
 }
