@@ -33,7 +33,7 @@
             android:layout_marginStart="10dp" android:adjustViewBounds="true"
             android:cropToPadding="false"
             android:scaleType="fitCenter"
-            app:riv_border_color="#DAF4FC"
+            app:riv_border_color="#FFFFFF"
             app:riv_border_width="5px"
             app:riv_corner_radius="25px"
             app:riv_mutate_background="true" />
