@@ -39,7 +39,6 @@ public class NewsActivity extends AppCompatActivity {
     SwipeRefreshLayout swipeRefreshLayout;
     Context ctx;
     ProgressBar progressBar;
-    Handler handler;
 
     String source = "";
     int defaultTopImageId = 0;
@@ -125,7 +124,7 @@ public class NewsActivity extends AppCompatActivity {
                         List<Article> articleList = response.body().getArticles();
                         /* We should delete first Article bwcause it show on Top, in separate View*/
                         articleList.remove(0);
-                        adapter = new NewsAdapter(articleList, getBaseContext());
+                        adapter = new NewsAdapter(articleList, getBaseContext(), defaultTopImageId);
                         adapter.notifyDataSetChanged();
                         listArticles.setAdapter(adapter);
                     }

@@ -2,7 +2,6 @@ package com.natlight.mobilenewsapp.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.curioustechizen.ago.RelativeTimeTextView;
@@ -13,7 +12,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     TextView articleTitle;
     CircleImageView articleImage;
-    RelativeTimeTextView articleTome;
+    RelativeTimeTextView articleTime;
 
     public void setItemClickListener(ItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
@@ -25,7 +24,7 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
         super(view);
         articleTitle = (TextView)itemView.findViewById(R.id.article_title);
         articleImage = (CircleImageView)itemView.findViewById(R.id.article_image);
-        articleTome = (RelativeTimeTextView)itemView.findViewById(R.id.article_time);
+        articleTime = (RelativeTimeTextView)itemView.findViewById(R.id.article_time);
 
         view.setOnClickListener(this);
     }

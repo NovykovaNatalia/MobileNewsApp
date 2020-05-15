@@ -20,11 +20,13 @@ import java.util.Date;
 import java.util.List;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsHolder> {
-    public NewsAdapter(List<Article> articleList, Context context) {
+    public NewsAdapter(List<Article> articleList, Context context, int defaultImageId) {
         this.articleList = articleList;
         this.context = context;
+        this.defaultImageId = defaultImageId;
     }
 
+    private int defaultImageId;
     private List<Article> articleList;
     private Context context;
 
@@ -48,20 +50,24 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsHolder> {
                 Log.e("mobileNewsApp", String.format("NewsAdapter: Picasso can't set image. imageURL: %s exception cause: %s ",
                         imgUrl, e.getCause()));
             }
+        } else {
+            holder.articleImage.setImageResource(defaultImageId);
         }
 
         if (articleList.get(position).getTitle().length() > 65)
             holder.articleTitle.setText(articleList.get(position).getTitle().substring(0, 65) + "...");
         else
             holder.articleTitle.setText(articleList.get(position).getTitle());
-        if (articleList.get(position).getPublishedAt() != null) {
+        if (articleList.get(position).getPublishedAt() != null && !articleList.get(position).getPublishedAt().isEmpty() ) {
             Date date = null;
             try {
                 date = ISO8601Parse.parse(articleList.get(position).getPublishedAt());
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            holder.articleTome.setReferenceTime(date.getTime());
+            if (date != null) {
+                holder.articleTime.setReferenceTime(date.getTime());
+            }
         }
 
         holder.setItemClickListener(new ItemClickListener() {

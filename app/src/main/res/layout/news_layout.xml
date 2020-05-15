@@ -17,6 +17,7 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/article_image"
+            android:src="@drawable/default_source_image"
             android:layout_weight="2"
             android:scaleType="centerCrop"
             android:layout_width="0dp"
