@@ -40,35 +40,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull NewsHolder holder, int position) {
-        String imgUrl = articleList.get(position).getUrlToImage();
-        if (imgUrl != null && !imgUrl.isEmpty()) {
-            try {
-                Picasso.get()
-                        .load(imgUrl)
-                        .into(holder.articleImage);
-            } catch (Throwable e) {
-                Log.e("mobileNewsApp", String.format("NewsAdapter: Picasso can't set image. imageURL: %s exception cause: %s ",
-                        imgUrl, e.getCause()));
-            }
-        } else {
-            holder.articleImage.setImageResource(defaultImageId);
-        }
-
-        if (articleList.get(position).getTitle().length() > 65)
-            holder.articleTitle.setText(articleList.get(position).getTitle().substring(0, 65) + "...");
-        else
-            holder.articleTitle.setText(articleList.get(position).getTitle());
-        if (articleList.get(position).getPublishedAt() != null && !articleList.get(position).getPublishedAt().isEmpty() ) {
-            Date date = null;
-            try {
-                date = ISO8601Parse.parse(articleList.get(position).getPublishedAt());
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            if (date != null) {
-                holder.articleTime.setReferenceTime(date.getTime());
-            }
-        }
+        setImage(holder, position);
+        setTitle(holder, position);
+        setDate(holder, position);
 
         holder.setItemClickListener(new ItemClickListener() {
             @Override
@@ -79,6 +53,46 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsHolder> {
                 context.startActivity(detail);
             }
         });
+    }
+
+    private void setDate(NewsHolder holder, int position) {
+        if (articleList.get(position).getPublishedAt() != null && !articleList.get(position).getPublishedAt().isEmpty()) {
+            Date date = null;
+            try {
+                date = ISO8601Parse.parse(articleList.get(position).getPublishedAt());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            if (date != null) {
+                holder.articleTime.setReferenceTime(date.getTime());
+            }
+        }
+    }
+
+    private void setTitle(NewsHolder holder, int position) {
+        if (articleList.get(position).getTitle().length() > 65) {
+            holder.articleTitle.setText(articleList.get(position).getTitle().substring(0, 65) + "...");
+        } else {
+            holder.articleTitle.setText(articleList.get(position).getTitle());
+        }
+    }
+
+    private void setImage(NewsHolder holder, int position) {
+        holder.articleImage.setImageResource(defaultImageId);
+        String imgUrl = articleList.get(position).getUrlToImage();
+        if (imgUrl != null && !imgUrl.isEmpty()) {
+            try {
+                Picasso.get()
+                        .load(imgUrl)
+                        .error(defaultImageId)
+                        .into(holder.articleImage);
+            } catch (Throwable e) {
+                Log.e("mobileNewsApp", String.format("NewsAdapter: Picasso can't set image. imageURL: %s exception cause: %s ",
+                        imgUrl, e.getCause()));
+            }
+        } else {
+            holder.articleImage.setImageResource(defaultImageId);
+        }
     }
 
     @Override

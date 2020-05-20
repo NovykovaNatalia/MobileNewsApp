@@ -29,6 +29,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.natlight.mobilenewsapp.utils.Constants.TEN_SEC_IN_MS;
+
 public class NewsActivity extends AppCompatActivity {
     public static final String API_KEY = "017ac0ad7b2c4367ba9e0a08343d8e9b";
     KenBurnsView topImage;
@@ -66,6 +68,13 @@ public class NewsActivity extends AppCompatActivity {
         networkService = NetworkService.getInstance();
         layoutManager = new LinearLayoutManager(this);
 
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                progressBar.setVisibility(View.INVISIBLE);
+            }
+        }, TEN_SEC_IN_MS);
         /* Configuration block*/
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -101,7 +110,6 @@ public class NewsActivity extends AppCompatActivity {
                 .enqueue(new Callback<News>() {
                     @Override
                     public void onResponse(Call<News> call, Response<News> response) {
-                        progressBar.setVisibility(View.GONE);
                         String path = response.body().getArticles().get(0).getUrlToImage();
                         if (path != null && !path.isEmpty()) {
                             try {
@@ -127,11 +135,12 @@ public class NewsActivity extends AppCompatActivity {
                         adapter = new NewsAdapter(articleList, getBaseContext(), defaultTopImageId);
                         adapter.notifyDataSetChanged();
                         listArticles.setAdapter(adapter);
+                        progressBar.setVisibility(View.INVISIBLE);
                     }
 
                     @Override
                     public void onFailure(Call<News> call, Throwable t) {
-                        progressBar.setVisibility(View.GONE);
+                        progressBar.setVisibility(View.INVISIBLE);
                         Log.e("mobileNewsApp", String.format("Request failed. URL: %s ",
                                 networkService.getAPIUrl(source, API_KEY)));
 
