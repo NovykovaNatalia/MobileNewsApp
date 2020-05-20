@@ -1,21 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/swipe_refresh_source"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.natlight.mobilenewsapp.SourceActivity">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/list_source"
+    <SearchView
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-    <com.github.ybq.android.spinkit.SpinKitView
-        android:id="@+id/SpinKitSource"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:layout_centerInParent = "true"
-        style="@style/SpinKitView.Small.Circle"
-        app:SpinKit_Color="#F2F3F4"/>
-      </android.support.v4.widget.SwipeRefreshLayout>
+        android:layout_height="20dp" />
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_source"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="30dp">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/list_source"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+
+        <com.github.ybq.android.spinkit.SpinKitView
+            android:id="@+id/SpinKitSource"
+            style="@style/SpinKitView.Small.Circle"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_centerInParent="true"
+            app:SpinKit_Color="#F2F3F4" />
+    </android.support.v4.widget.SwipeRefreshLayout>
+</RelativeLayout>
