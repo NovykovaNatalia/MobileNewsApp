@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 
 import com.google.gson.Gson;
 import com.natlight.mobilenewsapp.Model.NewsSources;
@@ -29,6 +30,7 @@ public class SourceActivity extends AppCompatActivity {
     ProgressBar progressBar;
     SwipeRefreshLayout swipeLayout;
     Context ctx;
+    SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,12 +45,26 @@ public class SourceActivity extends AppCompatActivity {
         swipeLayout = findViewById(R.id.swipe_refresh_source);
         listWebsite = findViewById(R.id.list_source);
         layoutManager = new LinearLayoutManager(ctx);
+        searchView = findViewById(R.id.search_view);
 
         /* End block of declare an initialization*/
 
         /* Configuration block*/
         listWebsite.setHasFixedSize(true);
         listWebsite.setLayoutManager(layoutManager);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.getFilter().filter(newText);
+                return false;
+            }
+        });
 
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
