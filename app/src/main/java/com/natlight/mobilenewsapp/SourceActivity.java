@@ -2,6 +2,7 @@ package com.natlight.mobilenewsapp;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 
@@ -31,6 +33,7 @@ public class SourceActivity extends AppCompatActivity {
     SwipeRefreshLayout swipeLayout;
     Context ctx;
     SearchView searchView;
+    ImageButton menuButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +49,16 @@ public class SourceActivity extends AppCompatActivity {
         listWebsite = findViewById(R.id.list_source);
         layoutManager = new LinearLayoutManager(ctx);
         searchView = findViewById(R.id.search_view);
+        menuButton = findViewById(R.id.menu_button);
+
+        menuButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ctx, MenuActivity.class);
+                startActivity(intent);
+            }
+        });
 
         /* End block of declare an initialization*/
 
